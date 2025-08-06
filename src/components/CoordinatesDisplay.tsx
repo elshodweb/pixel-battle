@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { PIXEL_SIZE, GRID_SIZE } from "@/constants";
+import { PIXEL_SIZE, GRID_WIDTH, GRID_HEIGHT } from "@/constants";
 
 interface CoordinatesDisplayProps {
   mousePosition: { x: number; y: number } | null;
@@ -27,8 +27,8 @@ const CoordinatesDisplay: React.FC<CoordinatesDisplayProps> = memo(
       }
 
       // Clamp coordinates to grid bounds
-      const clampedX = Math.max(0, Math.min(GRID_SIZE - 1, x));
-      const clampedY = Math.max(0, Math.min(GRID_SIZE - 1, y));
+      const clampedX = Math.max(0, Math.min(GRID_WIDTH - 1, x));
+      const clampedY = Math.max(0, Math.min(GRID_HEIGHT - 1, y));
 
       return { x: clampedX, y: clampedY };
     }, [pixelCoordinates, mousePosition, gridPosition, zoom]);

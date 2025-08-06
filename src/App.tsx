@@ -7,7 +7,7 @@ import ToolsPanel from "./components/ToolsPanel";
 import CanvasArea from "./components/CanvasArea";
 import Header from "./components/Header";
 import CenterText from "./components/CenterText";
-import { GRID_SIZE, DEFAULT_ZOOM } from "./constants";
+import { GRID_WIDTH, GRID_HEIGHT, DEFAULT_ZOOM } from "./constants";
 
 const PixelEditor: React.FC = memo(() => {
   const {
@@ -20,11 +20,8 @@ const PixelEditor: React.FC = memo(() => {
     setCurrentColor,
     setZoom,
     setPosition,
-    clearAll,
   } = useSimpleCanvas();
 
-  // Default values for UI
-  const credits = 0;
   const ethBalance = "0.0105";
   const walletAddress = "0x73..4e49";
 
@@ -36,11 +33,22 @@ const PixelEditor: React.FC = memo(() => {
     x: number;
     y: number;
   } | null>(null);
-  // Set initial position after component mounts (client-side only)
+  // Центрирование канваса при загрузке с отступами для видимости тени
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const centerX = window.innerWidth / 2 - (GRID_SIZE * 4 * zoom) / 2;
-      const centerY = window.innerHeight / 2 - (GRID_SIZE * 4 * zoom) / 2;
+      const shadowMargin = 40; // Отступ для полной видимости тени (shadowBlur: 20 + shadowOffset: 8 + запас)
+      const canvasWidth = GRID_WIDTH * zoom;
+      const canvasHeight = GRID_HEIGHT * zoom;
+
+      const centerX = Math.max(
+        shadowMargin,
+        (window.innerWidth - canvasWidth) / 2
+      );
+      const centerY = Math.max(
+        shadowMargin + 64, // +64 для header
+        (window.innerHeight - canvasHeight) / 2
+      );
+
       setPosition({ x: centerX, y: centerY });
     }
   }, [setPosition, zoom]);
@@ -76,29 +84,21 @@ const PixelEditor: React.FC = memo(() => {
     [setZoom]
   );
 
-  const setCredits = useCallback(() => {
-    // Placeholder for credits functionality
-  }, []);
+  const [credits, setCredits] = useState(0);
 
-  const handleCreditsChange = useCallback(
-    (newCredits: number) => {
-      setCredits(newCredits);
-    },
-    [setCredits]
-  );
+  const handleCreditsChange = useCallback((newCredits: number) => {
+    setCredits(newCredits);
+  }, []);
 
   return (
     <div
       className="min-h-screen text-white overflow-hidden"
-      style={{ backgroundColor: "#1a0a2e" }}
+      style={{ backgroundColor: "#100D20" }}
     >
-      {/* Header */}
       <Header ethBalance={ethBalance} walletAddress={walletAddress} />
 
-      {/* Center Text */}
       <CenterText />
 
-      {/* Main Canvas Area */}
       <CanvasArea
         pixels={pixels}
         updateCounter={updateCounter}
@@ -113,23 +113,19 @@ const PixelEditor: React.FC = memo(() => {
         onMouseMove={handleMouseMove}
       />
 
-      {/* Tools Panel - Left Bottom */}
       <ToolsPanel
         currentColor={currentColor}
         onColorChange={setCurrentColor}
-        onClearAll={clearAll}
         credits={credits}
         onCreditsChange={handleCreditsChange}
       />
 
-      {/* Instructions */}
       <div className="fixed bottom-6 right-6 z-20">
         <div className="bg-gray-900/80 border border-gray-600 rounded-lg px-3 py-2 text-xs text-gray-300">
           Alt + Scroll to zoom | Right-click + drag to move
         </div>
       </div>
 
-      {/* Decorative elements */}
       <div className="fixed top-10 right-1/4 w-2 h-2 bg-cyan-400 rounded-full animate-pulse z-0"></div>
       <div className="fixed bottom-10 left-1/4 w-1 h-1 bg-pink-400 rounded-full animate-ping z-0"></div>
       <div className="fixed top-1/2 left-5 w-1 h-1 bg-yellow-400 rounded-full animate-pulse z-0"></div>

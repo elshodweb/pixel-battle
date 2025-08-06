@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, memo } from "react";
@@ -13,8 +14,8 @@ const Header: React.FC<HeaderProps> = memo(
 
     return (
       <header
-        className="fixed top-0 left-0 right-0 z-50 border-b border-purple-700/30"
-        style={{ backgroundColor: "#1a0a2e" }}
+        className="fixed top-0 left-0 right-0 z-50 border-b"
+        style={{ backgroundColor: "#100D20", borderBottomColor: "#2A2535" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">

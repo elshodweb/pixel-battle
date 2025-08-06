@@ -1,6 +1,7 @@
-// Fixed grid size - optimized for performance
-export const GRID_SIZE = 256; // Reduced from 300 for better performance
-export const PIXEL_SIZE = 8; // Reduced from 10 for better performance
+// Canvas dimensions
+export const GRID_WIDTH = 256; // Canvas width in pixels
+export const GRID_HEIGHT = 256; // Canvas height in pixels
+export const PIXEL_SIZE = 1; // 1:1 pixel ratio for precise drawing
 
 // Performance optimization constants - optimized for instant drawing like Paint
 export const BATCH_UPDATE_DELAY = 0; // Instant updates - no batching delay

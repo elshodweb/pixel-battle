@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState, useRef, useEffect } from "react";
-import { GRID_SIZE, DEFAULT_ZOOM } from "@/constants";
+import { GRID_WIDTH, GRID_HEIGHT, DEFAULT_ZOOM } from "@/constants";
 
 export interface SimpleCanvasStore {
   currentColor: string;
@@ -23,20 +23,17 @@ const useSimpleCanvas = (): SimpleCanvasStore => {
   const [pixels, setPixels] = useState<Map<string, string>>(new Map());
   const [updateCounter, setUpdateCounter] = useState(0);
 
-  // Initialize with test pixels
+  // Инициализация с пустым канвасом
   useEffect(() => {
     if (typeof window !== "undefined") {
       const newPixels = new Map<string, string>();
-      newPixels.set("10-10", "#ff0000"); // Red
-      newPixels.set("11-10", "#00ff00"); // Green
-      newPixels.set("12-10", "#0000ff"); // Blue
       setPixels(newPixels);
-      console.log("Simple Canvas initialized with test pixels");
+      console.log("Simple Canvas initialized with empty canvas");
     }
   }, []);
 
   const setPixel = useCallback((x: number, y: number, color: string) => {
-    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
+    if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) return;
 
     const key = `${x}-${y}`;
     setPixels((prev) => {
@@ -44,7 +41,7 @@ const useSimpleCanvas = (): SimpleCanvasStore => {
       newPixels.set(key, color);
       return newPixels;
     });
-    setUpdateCounter((prev) => prev + 1); // Force re-render
+    setUpdateCounter((prev) => prev + 1);
     console.log(`Set pixel at ${x},${y} to ${color}`);
   }, []);
 

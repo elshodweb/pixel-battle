@@ -1,125 +1,127 @@
-# ABATTLE - Optimized Pixel Editor
+# Pixel Battle - HTML5 Canvas Pixel Editor
 
-A high-performance pixel editor built with Next.js, React, and TypeScript. Optimized for handling large grid sizes without browser performance issues. Features advanced zoom controls for detailed pixel work and a modern battle-themed interface.
+A modern pixel art editor built with Next.js, React, and TypeScript. Features HTML5 Canvas rendering for smooth performance, advanced zoom & pan controls, and a beautiful dark theme interface with professional-grade tools.
 
-## 🚀 Performance Optimizations
+## 🚀 Core Features
 
-### 1. **Virtual Rendering**
+### 1. **HTML5 Canvas Rendering**
 
-- Only renders visible pixels in the viewport
-- Uses viewport calculation with buffer zones
-- Dramatically reduces DOM elements for large grids
+- Direct Canvas API rendering for instant pixel updates
+- Shadow effects for realistic drawing surface
+- Smooth performance without DOM limitations
+- Clean pixel borders without grid lines
 
-### 2. **Batch Updates**
+### 2. **Advanced Drawing System**
 
-- Groups pixel updates into batches
-- Updates state at 60fps for smooth performance
-- Reduces React re-renders
+- Bresenham line algorithm for smooth brush strokes
+- No pixel skipping during fast mouse movements
+- Instant visual feedback on pixel placement
+- Continuous line drawing between mouse positions
 
-### 3. **Web Workers**
+### 3. **Professional Zoom & Pan Controls**
 
-- Uses Web Workers for grids larger than 256x256
-- Offloads pixel processing to background threads
-- Prevents main thread blocking
+- Alt + Mouse Wheel for precise zoom control
+- Right-click + Drag for canvas panning
+- Zoom range from 10% to 500%
+- Canvas centering on page load
 
-### 4. **Dynamic Pixel Sizing**
+### 4. **Modern Color Picker**
 
-- Auto-adjusts pixel size based on grid size
-- Manual pixel size control for fine-tuning
-- Performance recommendations
+- HSV color space with visual color area
+- Hue slider with precise color selection
+- Hex color input with live validation
+- 14 preset colors in organized grid
+- Automatic slider sync with preset selection
 
-### 5. **Memory Management**
+### 5. **Clean Dark Interface**
 
-- Efficient pixel data storage
-- Automatic cleanup of off-screen elements
-- Optimized state management
+- Professional dark theme (#100D20 background)
+- Compact horizontal tools panel
+- Floating color picker overlay
+- Orange accent colors for visual hierarchy
 
-### 6. **Advanced Zoom System**
+### 6. **Optimized Performance**
 
-- Smooth zoom from 10% to 500%
-- Mouse wheel zoom with center point preservation
-- Zoom to fit functionality
-- Precise zoom controls with slider
+- Efficient Map-based pixel storage
+- React state management with update counters
+- Shadow rendering with performance optimization
+- Clean codebase without unnecessary comments
 
-## 🎨 Features
+## 🎨 User Interface Features
 
-- **Dynamic Grid Sizing**: Choose from 32×32 to 1024×1024 grids
-- **Virtual Rendering**: Smooth performance with large grids
-- **Real-time Drawing**: Draw with mouse or touch
-- **Color Picker**: Full color palette support
-- **Canvas Dragging**: Right-click and drag to move canvas
-- **Advanced Zoom Controls**: Zoom from 10% to 500% with mouse wheel
-- **Performance Monitoring**: Real-time performance metrics
-- **Responsive Design**: Works on desktop and mobile
-- **Modern UI**: Battle-themed interface with gradient backgrounds
-- **Navigation**: Leaderboard and FAQ pages
+- **Pixel Drawing**: Left-click to draw pixels with selected color
+- **Smooth Brushing**: Fast mouse movements create continuous lines
+- **Canvas Navigation**: Right-click + drag to pan around large canvases
+- **Zoom Controls**: Alt + Mouse Wheel for detailed pixel work
+- **Color Selection**: Professional HSV color picker with presets
+- **Credits System**: Credit counter with add functionality
+- **Responsive Design**: Works on desktop and mobile devices
+- **Navigation**: Header with leaderboard and FAQ pages
+- **Modern Aesthetics**: Dark theme with orange accent colors
 
-## 🔧 Configuration
+## 🎮 Controls
 
-### Grid Size Presets
+### Drawing Controls
 
-- Small: 32×32 (1,024 pixels)
-- Medium: 64×64 (4,096 pixels)
-- Large: 128×128 (16,384 pixels)
-- Extra Large: 256×256 (65,536 pixels)
-- Huge: 512×512 (262,144 pixels)
+- **Left Click**: Draw pixels with selected color
+- **Mouse Drag**: Create continuous brush strokes
+- **Color Picker**: Click color circle to open picker
+- **Preset Colors**: Quick color selection from 14 presets
 
-### Pixel Size Options
+### Navigation Controls
 
-- Tiny: 4px
-- Small: 6px
-- Medium: 10px
-- Large: 16px
-- Extra Large: 24px
+- **Alt + Mouse Wheel**: Zoom in/out (10% - 500%)
+- **Right Click + Drag**: Pan around the canvas
+- **Auto Center**: Canvas centers automatically on load
 
-### Zoom Controls
+### Color Picker Interface
 
-- **Mouse Wheel**: Scroll to zoom in/out
-- **Zoom In/Out Buttons**: Precise zoom control
-- **Reset Button**: Return to 100% zoom
-- **Fit to Screen**: Automatically fit grid to viewport
-- **Zoom Slider**: Direct zoom level selection (10% - 500%)
+- **HSV Area**: Click to select saturation and lightness
+- **Hue Slider**: Drag to select color hue
+- **Hex Input**: Enter precise hex color codes
+- **Preset Grid**: 14 professional colors in 2x7 grid
+- **Automatic Sync**: Sliders update when presets are selected
 
-## 🚀 Performance Tips
+## 🚀 Performance Features
 
-1. **Use Recommended Pixel Sizes**: The app suggests optimal pixel sizes for each grid size
-2. **Monitor Performance**: Watch the performance percentage in the info panel
-3. **Clear Canvas**: Use the clear button to free memory when switching large grids
-4. **Browser Compatibility**: Modern browsers with Web Worker support work best
-5. **Zoom for Detail**: Use zoom controls for detailed pixel work on large grids
+1. **Instant Rendering**: Direct Canvas API ensures immediate pixel updates
+2. **Smooth Brushing**: Bresenham algorithm prevents pixel skipping
+3. **Efficient Storage**: Map-based pixel data for optimal memory usage
+4. **Shadow Optimization**: Performance-optimized shadow rendering
+5. **Browser Compatibility**: Works in all modern browsers with Canvas support
 
-## 🎯 Zoom Features
+## 🎯 Canvas Features
 
-### Mouse Wheel Zoom
+### Drawing Area
 
-- Scroll up to zoom in
-- Scroll down to zoom out
-- Zoom centers on mouse position
-- Smooth zoom transitions
+- **Fixed Grid Size**: 100x100 pixel canvas
+- **Shadow Effects**: Realistic depth with drop shadows
+- **Clean Borders**: Subtle border for canvas definition
+- **Dark Background**: Professional #100D20 theme
 
-### Zoom Controls Panel
+### Color System
 
-- **Zoom In (+)** : Increase zoom by 10%
-- **Zoom Out (-)** : Decrease zoom by 10%
-- **Reset** : Return to 100% zoom
-- **Fit to Screen** : Automatically scale to fit viewport
-- **Zoom Slider** : Direct zoom level control
+- **Default Color**: Red (#ff0000) for immediate drawing
+- **HSV Color Space**: Professional color selection
+- **Preset Palette**: 14 carefully chosen colors
+- **Hex Support**: Direct hex code input (#ffffff format)
 
-### Zoom Ranges
+### Drawing Mechanics
 
-- **Minimum**: 10% (for overview of large grids)
-- **Default**: 100% (normal view)
-- **Maximum**: 500% (for detailed pixel work)
+- **Pixel Size**: 4x zoom factor for clear visibility
+- **Brush Smoothing**: Continuous line drawing
+- **Instant Feedback**: Immediate visual response
+- **No Grid Lines**: Clean pixel art appearance
 
 ## 🛠️ Technical Stack
 
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **State Management**: React hooks with optimized state updates
-- **Performance**: Web Workers, Virtual Rendering, Batch Updates
-- **Zoom System**: Custom zoom implementation with viewport calculations
-- **UI Design**: Modern gradient backgrounds with battle theme
+- **Framework**: Next.js 15.4.5 with App Router
+- **Language**: TypeScript with strict type checking
+- **Styling**: Tailwind CSS for responsive design
+- **Canvas**: HTML5 Canvas API for direct pixel rendering
+- **State Management**: React hooks with Map-based pixel storage
+- **Performance**: Bresenham algorithm for line drawing
+- **Theme**: Custom dark theme with orange accents (#100D20)
 
 ## 📁 Project Structure
 
@@ -130,16 +132,15 @@ src/
 │   ├── faq/            # FAQ page
 │   └── page.tsx        # Main page
 ├── components/          # React components
-│   ├── Header.tsx      # Navigation header with logo
-│   ├── PixelGrid.tsx   # Optimized pixel grid with virtual rendering & zoom
-│   ├── CanvasArea.tsx  # Canvas container
-│   ├── ToolsPanel.tsx  # Tools and controls
-│   ├── ZoomControls.tsx # Zoom control panel
-│   └── InfoPanel.tsx   # Performance monitoring
+│   ├── Header.tsx      # Navigation header with dark theme
+│   ├── SimpleCanvas.tsx # HTML5 Canvas with Bresenham line drawing
+│   ├── CanvasArea.tsx  # Canvas wrapper with coordinates display
+│   ├── ToolsPanel.tsx  # Compact tools panel with credits
+│   ├── ColorPicker.tsx # HSV color picker with presets
+│   ├── CenterText.tsx  # Center text overlay
+│   └── CoordinatesDisplay.tsx # Mouse position display
 ├── hooks/              # Custom React hooks
-│   └── usePixelStore.ts # Optimized state management with zoom
-├── workers/            # Web Workers
-│   └── pixelWorker.ts  # Background pixel processing
+│   └── useSimpleCanvas.ts # Canvas state management
 ├── constants/          # Configuration constants
 └── types/              # TypeScript type definitions
 public/
@@ -147,60 +148,91 @@ public/
 └── icons/             # SVG icons
 ```
 
-## 🎯 Key Optimizations
+## 🎯 Implementation Details
 
-### Virtual Rendering Implementation
+### Canvas Rendering with Shadows
 
 ```typescript
-// Only render visible pixels
-const visiblePixels = useMemo(() => {
-  const pixelElements: ReactElement[] = [];
+// Canvas rendering with shadow effects
+const draw = useCallback(() => {
+  const ctx = canvas.getContext("2d");
 
-  for (let y = visibleRange.startY; y < visibleRange.endY; y++) {
-    for (let x = visibleRange.startX; x < visibleRange.endX; x++) {
-      // Create pixel element only if visible
+  // Background
+  ctx.fillStyle = "#100D20";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Drawing area with shadow
+  ctx.shadowColor = "#000000";
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetX = 8;
+  ctx.shadowOffsetY = 8;
+
+  ctx.fillStyle = "#1A1528";
+  ctx.fillRect(position.x, position.y, gridSize, gridSize);
+
+  // Pixels
+  pixels.forEach((color, key) => {
+    const [x, y] = key.split("-").map(Number);
+    ctx.fillStyle = color;
+    ctx.fillRect(
+      position.x + x * pixelSize,
+      position.y + y * pixelSize,
+      pixelSize,
+      pixelSize
+    );
+  });
+}, [pixels, position, zoom]);
+```
+
+### Smooth Line Drawing
+
+```typescript
+// Bresenham algorithm for continuous lines
+const drawLine = useCallback(
+  (x0, y0, x1, y1) => {
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy;
+
+    let x = x0,
+      y = y0;
+    while (true) {
+      onPixelClick(x, y);
+      if (x === x1 && y === y1) break;
+
+      const e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        x += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y += sy;
+      }
     }
-  }
-
-  return pixelElements;
-}, [visibleRange, pixels, gridSize]);
-```
-
-### Batch Updates
-
-```typescript
-// Group updates for better performance
-const setPixel = useCallback(
-  (x: number, y: number, color: string) => {
-    batchUpdatesRef.current.set(key, color);
-
-    // Flush updates at 60fps
-    timeoutRef.current = setTimeout(() => {
-      flushBatchUpdates();
-    }, 16);
   },
-  [gridSize, flushBatchUpdates]
+  [onPixelClick]
 );
 ```
 
-### Zoom Implementation
+### HSV Color Picker
 
 ```typescript
-// Handle mouse wheel zoom with center point preservation
-const handleWheel = useCallback(
-  (e: React.WheelEvent) => {
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    const newZoom = Math.max(0.1, Math.min(5.0, zoom + delta));
-
-    // Calculate zoom center and adjust position
-    const zoomCenterX = (mouseX - position.x) / zoom;
-    const zoomCenterY = (mouseY - position.y) / zoom;
-
-    onZoomChange(newZoom);
-    onPositionChange({ x: newPositionX, y: newPositionY });
-  },
-  [zoom, position, onZoomChange, onPositionChange]
-);
+// HSV to Hex conversion
+const hslToHex = useCallback((h, s, l) => {
+  l /= 100;
+  const a = (s * Math.min(l, 1 - l)) / 100;
+  const f = (n) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}, []);
 ```
 
 ## 🤝 Contributing
@@ -217,25 +249,26 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🆘 Troubleshooting
 
-### Performance Issues
+### Drawing Issues
 
-- Reduce grid size or pixel size
-- Check browser console for Web Worker errors
-- Ensure you're using a modern browser
-- Clear browser cache if needed
+- Ensure left mouse button is working properly
+- Try clicking slowly if fast movements skip pixels
+- Check that Canvas API is supported in your browser
+- Clear browser cache if drawing appears laggy
 
-### Large Grids Not Working
+### Color Picker Issues
 
-- Verify Web Worker support in your browser
-- Check available memory
-- Try smaller grid sizes first
+- Verify hex codes are in #ffffff format
+- Check that HSV area responds to clicks
+- Ensure preset colors are clickable
+- Try refreshing if color sync is broken
 
-### Zoom Issues
+### Navigation Issues
 
-- Ensure mouse wheel is working properly
-- Try using zoom control buttons instead
-- Reset zoom to 100% if view becomes distorted
-- Use "Fit to Screen" for optimal view
+- Hold Alt key while scrolling to zoom
+- Use right mouse button to drag canvas
+- Check that mouse wheel events are enabled
+- Try refreshing if pan/zoom becomes unresponsive
 
 ---
 

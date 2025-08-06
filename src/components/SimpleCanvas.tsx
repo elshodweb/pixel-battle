@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import { GRID_SIZE } from "@/constants";
+import { GRID_WIDTH, GRID_HEIGHT } from "@/constants";
 
 interface SimpleCanvasProps {
   pixels: Map<string, string>;
@@ -37,11 +37,48 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
   const [panStart, setPanStart] = useState<{ x: number; y: number } | null>(
     null
   );
+  const [lastPixel, setLastPixel] = useState<{ x: number; y: number } | null>(
+    null
+  );
 
-  // Pixel size in screen pixels
   const pixelSize = 4 * zoom;
 
-  // Draw the canvas
+  // Функция для рисования линии между двумя пикселями (алгоритм Bresenham)
+  const drawLine = useCallback(
+    (x0: number, y0: number, x1: number, y1: number) => {
+      const dx = Math.abs(x1 - x0);
+      const dy = Math.abs(y1 - y0);
+      const sx = x0 < x1 ? 1 : -1;
+      const sy = y0 < y1 ? 1 : -1;
+      let err = dx - dy;
+
+      let x = x0;
+      let y = y0;
+
+      while (true) {
+        // Рисуем текущий пиксель
+        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT) {
+          onPixelClick(x, y);
+        }
+
+        // Проверяем, достигли ли конечной точки
+        if (x === x1 && y === y1) break;
+
+        const e2 = 2 * err;
+        if (e2 > -dy) {
+          err -= dy;
+          x += sx;
+        }
+        if (e2 < dx) {
+          err += dx;
+          y += sy;
+        }
+      }
+    },
+    [onPixelClick]
+  );
+
+  // Отрисовка канваса
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -49,16 +86,32 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Clear canvas
-    ctx.fillStyle = "#1f2937"; // Dark gray background
+    ctx.fillStyle = "#100D20";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw grid background
-    const gridSize = GRID_SIZE * pixelSize;
-    ctx.fillStyle = "#374151"; // Slightly lighter gray for grid
-    ctx.fillRect(position.x, position.y, gridSize, gridSize);
+    const canvasWidth = GRID_WIDTH * pixelSize;
+    const canvasHeight = GRID_HEIGHT * pixelSize;
 
-    // Draw pixels
+    // Тень для области рисования
+    ctx.shadowColor = "#000000";
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 8;
+    ctx.shadowOffsetY = 8;
+
+    ctx.fillStyle = "#1A1528";
+    ctx.fillRect(position.x, position.y, canvasWidth, canvasHeight);
+
+    // Убираем тень для бордера
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // Бордер вокруг области рисования
+    ctx.strokeStyle = "#2A2535";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(position.x, position.y, canvasWidth, canvasHeight);
+
     pixels.forEach((color, key) => {
       const [x, y] = key.split("-").map(Number);
       ctx.fillStyle = color;
@@ -70,34 +123,9 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
       );
     });
 
-    // Draw grid lines if zoomed in
-    if (zoom > 0.5) {
-      ctx.strokeStyle = "#4b5563";
-      ctx.lineWidth = 1;
-
-      // Vertical lines
-      for (let x = 0; x <= GRID_SIZE; x++) {
-        const screenX = position.x + x * pixelSize;
-        ctx.beginPath();
-        ctx.moveTo(screenX, position.y);
-        ctx.lineTo(screenX, position.y + gridSize);
-        ctx.stroke();
-      }
-
-      // Horizontal lines
-      for (let y = 0; y <= GRID_SIZE; y++) {
-        const screenY = position.y + y * pixelSize;
-        ctx.beginPath();
-        ctx.moveTo(position.x, screenY);
-        ctx.lineTo(position.x + gridSize, screenY);
-        ctx.stroke();
-      }
-    }
-
     console.log(`Canvas drawn: ${pixels.size} pixels, zoom: ${zoom}`);
   }, [pixels, position, pixelSize, zoom, updateCounter]);
 
-  // Redraw when dependencies change
   useEffect(() => {
     draw();
   }, [draw]);
@@ -140,11 +168,12 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
         // Left click - draw
         setIsDrawing(true);
         const { x: pixelX, y: pixelY } = screenToPixel(screenX, screenY);
+        setLastPixel({ x: pixelX, y: pixelY });
         if (
           pixelX >= 0 &&
-          pixelX < GRID_SIZE &&
+          pixelX < GRID_WIDTH &&
           pixelY >= 0 &&
-          pixelY < GRID_SIZE
+          pixelY < GRID_HEIGHT
         ) {
           onPixelClick(pixelX, pixelY);
         }
@@ -168,9 +197,9 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
       if (
         onMouseMove &&
         pixelX >= 0 &&
-        pixelX < GRID_SIZE &&
+        pixelX < GRID_WIDTH &&
         pixelY >= 0 &&
-        pixelY < GRID_SIZE
+        pixelY < GRID_HEIGHT
       ) {
         onMouseMove(screenX, screenY, pixelX, pixelY);
       }
@@ -183,11 +212,17 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
       } else if (isDrawing) {
         if (
           pixelX >= 0 &&
-          pixelX < GRID_SIZE &&
+          pixelX < GRID_WIDTH &&
           pixelY >= 0 &&
-          pixelY < GRID_SIZE
+          pixelY < GRID_HEIGHT
         ) {
-          onPixelClick(pixelX, pixelY);
+          // Если есть предыдущая позиция, рисуем линию между точками
+          if (lastPixel && (lastPixel.x !== pixelX || lastPixel.y !== pixelY)) {
+            drawLine(lastPixel.x, lastPixel.y, pixelX, pixelY);
+          } else {
+            onPixelClick(pixelX, pixelY);
+          }
+          setLastPixel({ x: pixelX, y: pixelY });
         }
       }
     },
@@ -199,6 +234,8 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
       onPositionChange,
       isDrawing,
       onPixelClick,
+      lastPixel,
+      drawLine,
     ]
   );
 
@@ -206,6 +243,7 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
     setIsDrawing(false);
     setIsPanning(false);
     setPanStart(null);
+    setLastPixel(null);
   }, []);
 
   const handleWheel = useCallback(
