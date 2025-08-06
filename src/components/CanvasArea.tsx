@@ -1,52 +1,54 @@
 import { memo } from "react";
-import { PixelData } from "@/types";
+import SimpleCanvas from "./SimpleCanvas";
 import CoordinatesDisplay from "./CoordinatesDisplay";
-import PixelGrid from "./PixelGrid";
 
 interface CanvasAreaProps {
-  pixels: PixelData;
+  pixels: Map<string, string>;
+  updateCounter: number;
   currentColor: string;
   zoom: number;
+  position: { x: number; y: number };
   mousePosition: { x: number; y: number } | null;
   pixelCoordinates: { x: number; y: number } | null;
   onPixelClick: (x: number, y: number) => void;
-  onMouseMove: (x: number, y: number, pixelX?: number, pixelY?: number) => void;
   onZoomChange: (zoom: number) => void;
-  gridPosition: { x: number; y: number };
-  onGridPositionChange: (position: { x: number; y: number }) => void;
+  onPositionChange: (position: { x: number; y: number }) => void;
+  onMouseMove: (x: number, y: number, pixelX?: number, pixelY?: number) => void;
 }
 
 const CanvasArea: React.FC<CanvasAreaProps> = memo(
   ({
     pixels,
+    updateCounter,
     currentColor,
     zoom,
+    position,
     mousePosition,
     pixelCoordinates,
     onPixelClick,
-    onMouseMove,
     onZoomChange,
-    gridPosition,
-    onGridPositionChange,
+    onPositionChange,
+    onMouseMove,
   }) => {
     return (
       <>
-        <PixelGrid
+        <SimpleCanvas
           pixels={pixels}
+          updateCounter={updateCounter}
           currentColor={currentColor}
           zoom={zoom}
+          position={position}
           onPixelClick={onPixelClick}
-          onMouseMove={onMouseMove}
           onZoomChange={onZoomChange}
-          position={gridPosition}
-          onPositionChange={onGridPositionChange}
+          onPositionChange={onPositionChange}
+          onMouseMove={onMouseMove}
         />
 
         <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-20">
           <CoordinatesDisplay
             mousePosition={mousePosition}
             pixelCoordinates={pixelCoordinates}
-            gridPosition={gridPosition}
+            gridPosition={position}
             zoom={zoom}
           />
         </div>

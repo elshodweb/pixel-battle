@@ -1,27 +1,32 @@
 "use client";
 
 import { useCallback, useEffect, useState, memo } from "react";
-import usePixelStore from "./hooks/usePixelStore";
+
+import useSimpleCanvas from "./hooks/useSimpleCanvas";
 import ToolsPanel from "./components/ToolsPanel";
 import CanvasArea from "./components/CanvasArea";
 import Header from "./components/Header";
 import CenterText from "./components/CenterText";
-import { PIXEL_SIZE, DEFAULT_ZOOM } from "./constants";
+import { GRID_SIZE, DEFAULT_ZOOM } from "./constants";
 
 const PixelEditor: React.FC = memo(() => {
   const {
-    pixels,
     currentColor,
     zoom,
-    credits,
-    ethBalance,
-    walletAddress,
+    position,
+    pixels,
+    updateCounter,
     setPixel,
     setCurrentColor,
     setZoom,
-    setCredits,
+    setPosition,
     clearAll,
-  } = usePixelStore();
+  } = useSimpleCanvas();
+
+  // Default values for UI
+  const credits = 0;
+  const ethBalance = "0.0105";
+  const walletAddress = "0x73..4e49";
 
   const [mousePosition, setMousePosition] = useState<{
     x: number;
@@ -31,17 +36,14 @@ const PixelEditor: React.FC = memo(() => {
     x: number;
     y: number;
   } | null>(null);
-  const [gridPosition, setGridPosition] = useState<{ x: number; y: number }>({
-    x: 400,
-    y: 200,
-  });
-
   // Set initial position after component mounts (client-side only)
   useEffect(() => {
-    const centerX = window.innerWidth / 2 - (64 * PIXEL_SIZE * zoom) / 2;
-    const centerY = window.innerHeight / 2 - (64 * PIXEL_SIZE * zoom) / 2;
-    setGridPosition({ x: centerX, y: centerY });
-  }, [zoom]);
+    if (typeof window !== "undefined") {
+      const centerX = window.innerWidth / 2 - (GRID_SIZE * 4 * zoom) / 2;
+      const centerY = window.innerHeight / 2 - (GRID_SIZE * 4 * zoom) / 2;
+      setPosition({ x: centerX, y: centerY });
+    }
+  }, [setPosition, zoom]);
 
   const handlePixelClick = useCallback(
     (x: number, y: number) => {
@@ -60,11 +62,11 @@ const PixelEditor: React.FC = memo(() => {
     []
   );
 
-  const handleGridPositionChange = useCallback(
-    (position: { x: number; y: number }) => {
-      setGridPosition(position);
+  const handlePositionChange = useCallback(
+    (newPosition: { x: number; y: number }) => {
+      setPosition(newPosition);
     },
-    []
+    [setPosition]
   );
 
   const handleZoomChange = useCallback(
@@ -73,6 +75,10 @@ const PixelEditor: React.FC = memo(() => {
     },
     [setZoom]
   );
+
+  const setCredits = useCallback(() => {
+    // Placeholder for credits functionality
+  }, []);
 
   const handleCreditsChange = useCallback(
     (newCredits: number) => {
@@ -95,15 +101,16 @@ const PixelEditor: React.FC = memo(() => {
       {/* Main Canvas Area */}
       <CanvasArea
         pixels={pixels}
+        updateCounter={updateCounter}
         currentColor={currentColor}
         zoom={zoom}
+        position={position}
         mousePosition={mousePosition}
         pixelCoordinates={pixelCoordinates}
         onPixelClick={handlePixelClick}
-        onMouseMove={handleMouseMove}
         onZoomChange={handleZoomChange}
-        gridPosition={gridPosition}
-        onGridPositionChange={handleGridPositionChange}
+        onPositionChange={handlePositionChange}
+        onMouseMove={handleMouseMove}
       />
 
       {/* Tools Panel - Left Bottom */}

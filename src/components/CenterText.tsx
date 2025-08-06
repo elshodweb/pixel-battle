@@ -2,7 +2,7 @@ import { memo } from "react";
 
 const CenterText: React.FC = memo(() => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-5">
+    <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-0">
       <div
         className="text-8xl font-bold text-white"
         style={{
