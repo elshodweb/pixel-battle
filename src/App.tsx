@@ -1,15 +1,33 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, memo } from "react";
 import usePixelStore from "./hooks/usePixelStore";
 import ToolsPanel from "./components/ToolsPanel";
 import CanvasArea from "./components/CanvasArea";
-import InstructionsPanel from "./components/InstructionsPanel";
-import { GRID_SIZE, PIXEL_SIZE } from "./constants";
-const PixelEditor: React.FC = () => {
-  const { pixels, currentColor, setPixel, setCurrentColor, clearAll } =
-    usePixelStore();
+import Header from "./components/Header";
+import CenterText from "./components/CenterText";
+import { PIXEL_SIZE, DEFAULT_ZOOM } from "./constants";
+
+const PixelEditor: React.FC = memo(() => {
+  const {
+    pixels,
+    currentColor,
+    zoom,
+    credits,
+    ethBalance,
+    walletAddress,
+    setPixel,
+    setCurrentColor,
+    setZoom,
+    setCredits,
+    clearAll,
+  } = usePixelStore();
+
   const [mousePosition, setMousePosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [pixelCoordinates, setPixelCoordinates] = useState<{
     x: number;
     y: number;
   } | null>(null);
@@ -20,10 +38,10 @@ const PixelEditor: React.FC = () => {
 
   // Set initial position after component mounts (client-side only)
   useEffect(() => {
-    const centerX = window.innerWidth / 2 - (GRID_SIZE * PIXEL_SIZE) / 2;
-    const centerY = window.innerHeight / 2 - (GRID_SIZE * PIXEL_SIZE) / 2;
+    const centerX = window.innerWidth / 2 - (64 * PIXEL_SIZE * zoom) / 2;
+    const centerY = window.innerHeight / 2 - (64 * PIXEL_SIZE * zoom) / 2;
     setGridPosition({ x: centerX, y: centerY });
-  }, []);
+  }, [zoom]);
 
   const handlePixelClick = useCallback(
     (x: number, y: number) => {
@@ -32,9 +50,15 @@ const PixelEditor: React.FC = () => {
     [setPixel, currentColor]
   );
 
-  const handleMouseMove = useCallback((x: number, y: number) => {
-    setMousePosition({ x, y });
-  }, []);
+  const handleMouseMove = useCallback(
+    (x: number, y: number, pixelX?: number, pixelY?: number) => {
+      setMousePosition({ x, y });
+      if (pixelX !== undefined && pixelY !== undefined) {
+        setPixelCoordinates({ x: pixelX, y: pixelY });
+      }
+    },
+    []
+  );
 
   const handleGridPositionChange = useCallback(
     (position: { x: number; y: number }) => {
@@ -43,63 +67,58 @@ const PixelEditor: React.FC = () => {
     []
   );
 
+  const handleZoomChange = useCallback(
+    (newZoom: number) => {
+      setZoom(newZoom);
+    },
+    [setZoom]
+  );
+
+  const handleCreditsChange = useCallback(
+    (newCredits: number) => {
+      setCredits(newCredits);
+    },
+    [setCredits]
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+    <div
+      className="min-h-screen text-white overflow-hidden"
+      style={{ backgroundColor: "#1a0a2e" }}
+    >
       {/* Header */}
-      <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-40">
-        <div className="text-4xl font-bold">
-          <span className="text-green-400">P</span>
-          <span className="text-blue-400">I</span>
-          <span className="text-red-400">X</span>
-          <span className="text-yellow-400">E</span>
-          <span className="text-purple-400">L</span>
-          <span className="text-cyan-400"> </span>
-          <span className="text-pink-400">E</span>
-          <span className="text-orange-400">D</span>
-          <span className="text-green-400">I</span>
-          <span className="text-blue-400">T</span>
-          <span className="text-red-400">O</span>
-          <span className="text-yellow-400">R</span>
-        </div>
-      </div>
+      <Header ethBalance={ethBalance} walletAddress={walletAddress} />
 
-      {/* Status */}
-      <div className="fixed top-6 right-6 z-40">
-        <div className="bg-gray-900 border border-yellow-500 rounded-lg px-4 py-2">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-            <span className="text-yellow-400 font-bold">ONLINE</span>
-          </div>
-        </div>
-      </div>
+      {/* Center Text */}
+      <CenterText />
 
-      {/* Instructions */}
-      <div className="fixed top-6 right-6 mt-16 z-30">
-        <InstructionsPanel />
-      </div>
+      {/* Main Canvas Area */}
+      <CanvasArea
+        pixels={pixels}
+        currentColor={currentColor}
+        zoom={zoom}
+        mousePosition={mousePosition}
+        pixelCoordinates={pixelCoordinates}
+        onPixelClick={handlePixelClick}
+        onMouseMove={handleMouseMove}
+        onZoomChange={handleZoomChange}
+        gridPosition={gridPosition}
+        onGridPositionChange={handleGridPositionChange}
+      />
 
       {/* Tools Panel - Left Bottom */}
       <ToolsPanel
         currentColor={currentColor}
         onColorChange={setCurrentColor}
         onClearAll={clearAll}
+        credits={credits}
+        onCreditsChange={handleCreditsChange}
       />
 
-      {/* Canvas Area - Draggable Grid */}
-      <CanvasArea
-        pixels={pixels}
-        currentColor={currentColor}
-        mousePosition={mousePosition}
-        onPixelClick={handlePixelClick}
-        onMouseMove={handleMouseMove}
-        gridPosition={gridPosition}
-        onGridPositionChange={handleGridPositionChange}
-      />
-
-      {/* Drag Hint */}
+      {/* Instructions */}
       <div className="fixed bottom-6 right-6 z-20">
         <div className="bg-gray-900/80 border border-gray-600 rounded-lg px-3 py-2 text-xs text-gray-300">
-          Right-click + drag to move canvas
+          Alt + Scroll to zoom | Right-click + drag to move
         </div>
       </div>
 
@@ -109,6 +128,6 @@ const PixelEditor: React.FC = () => {
       <div className="fixed top-1/2 left-5 w-1 h-1 bg-yellow-400 rounded-full animate-pulse z-0"></div>
     </div>
   );
-};
+});
 
 export default PixelEditor;
