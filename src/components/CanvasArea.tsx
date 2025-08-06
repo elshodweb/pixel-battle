@@ -7,6 +7,8 @@ interface CanvasAreaProps {
   mousePosition: { x: number; y: number } | null;
   onPixelClick: (x: number, y: number) => void;
   onMouseMove: (x: number, y: number) => void;
+  gridPosition: { x: number; y: number };
+  onGridPositionChange: (position: { x: number; y: number }) => void;
 }
 
 const CanvasArea: React.FC<CanvasAreaProps> = ({
@@ -15,18 +17,25 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   mousePosition,
   onPixelClick,
   onMouseMove,
+  gridPosition,
+  onGridPositionChange,
 }) => {
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <>
       <PixelGrid
         pixels={pixels}
         currentColor={currentColor}
         onPixelClick={onPixelClick}
         onMouseMove={onMouseMove}
+        position={gridPosition}
+        onPositionChange={onGridPositionChange}
       />
 
-      <CoordinatesDisplay mousePosition={mousePosition} />
-    </div>
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-20">
+        <CoordinatesDisplay mousePosition={mousePosition} />
+      </div>
+    </>
   );
 };
+
 export default CanvasArea;

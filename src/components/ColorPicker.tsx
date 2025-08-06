@@ -98,7 +98,7 @@ interface ColorPickerProps {
         </div>
   
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-gray-700 rounded-lg p-4 z-10 w-80">
+          <div className="absolute bottom-0 left-[105%] right-0 mt-2 bg-gray-900 border border-gray-700 rounded-lg p-4 z-10 w-80">
             {/* Color Preview */}
             <div className="w-full h-12 rounded-lg border border-gray-600 mb-4" style={{ backgroundColor: currentColor }}></div>
             

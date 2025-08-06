@@ -15,7 +15,7 @@ const ToolsPanel: React.FC<ToolsPanelProps> = ({
   onClearAll,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="fixed bottom-6 left-6 space-y-4 z-30 max-w-xs">
       <ColorPicker currentColor={currentColor} onColorChange={onColorChange} />
 
       <InfoPanel
@@ -28,4 +28,6 @@ const ToolsPanel: React.FC<ToolsPanelProps> = ({
     </div>
   );
 };
+
+
 export default ToolsPanel;
