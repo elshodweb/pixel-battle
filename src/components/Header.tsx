@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = memo(
                   <div className="flex items-center space-x-1">
                     {!imageError ? (
                       <Image
-                        src="/logo.png"
+                        src="/logo.svg"
                         alt="ABATTLE Logo"
                         width={120}
                         height={32}
@@ -46,16 +46,6 @@ const Header: React.FC<HeaderProps> = memo(
                         <span className="text-yellow-400">E</span>
                       </div>
                     )}
-
-                    {/* Scattered pixels around logo */}
-                    <div className="relative ml-2">
-                      <div className="absolute -top-1 -left-1 w-1 h-1 bg-pink-400 rounded-sm animate-pulse"></div>
-                      <div className="absolute -top-1 -right-1 w-1 h-1 bg-cyan-400 rounded-sm animate-pulse delay-100"></div>
-                      <div className="absolute -bottom-1 -left-1 w-1 h-1 bg-yellow-400 rounded-sm animate-pulse delay-200"></div>
-                      <div className="absolute -bottom-1 -right-1 w-1 h-1 bg-green-400 rounded-sm animate-pulse delay-300"></div>
-                      <div className="absolute top-1/2 -left-2 w-1 h-1 bg-purple-400 rounded-sm animate-pulse delay-150"></div>
-                      <div className="absolute top-1/2 -right-2 w-1 h-1 bg-orange-400 rounded-sm animate-pulse delay-250"></div>
-                    </div>
                   </div>
                 </div>
               </div>

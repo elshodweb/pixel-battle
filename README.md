@@ -144,7 +144,7 @@ src/
 ├── constants/          # Configuration constants
 └── types/              # TypeScript type definitions
 public/
-├── logo.png           # ABATTLE logo
+├── logo.svg           # ABATTLE logo
 └── icons/             # SVG icons
 ```
 

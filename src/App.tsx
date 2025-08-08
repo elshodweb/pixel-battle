@@ -125,10 +125,6 @@ const PixelEditor: React.FC = memo(() => {
           Alt + Scroll to zoom | Right-click + drag to move
         </div>
       </div>
-
-      <div className="fixed top-10 right-1/4 w-2 h-2 bg-cyan-400 rounded-full animate-pulse z-0"></div>
-      <div className="fixed bottom-10 left-1/4 w-1 h-1 bg-pink-400 rounded-full animate-ping z-0"></div>
-      <div className="fixed top-1/2 left-5 w-1 h-1 bg-yellow-400 rounded-full animate-pulse z-0"></div>
     </div>
   );
 });
