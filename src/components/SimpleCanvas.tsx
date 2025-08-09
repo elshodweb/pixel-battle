@@ -122,8 +122,6 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
         pixelSize
       );
     });
-
-    console.log(`Canvas drawn: ${pixels.size} pixels, zoom: ${zoom}`);
   }, [pixels, position, pixelSize, zoom, updateCounter]);
 
   useEffect(() => {
@@ -133,7 +131,7 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
   // Setup canvas size
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || typeof window === "undefined") return;
 
     const updateCanvasSize = () => {
       canvas.width = window.innerWidth;
@@ -249,13 +247,39 @@ const SimpleCanvas: React.FC<SimpleCanvasProps> = ({
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
       if (e.altKey) {
-        e.preventDefault();
+        // Используем stopPropagation вместо preventDefault для пассивных событий
+        e.stopPropagation();
+
+        // Получаем текущую позицию мыши относительно канваса
+        const rect = e.currentTarget.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        // Применяем зум
         const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
         const newZoom = Math.max(0.1, Math.min(5.0, zoom * zoomFactor));
+
+        // Вычисляем позицию мыши в координатах канваса (до зума)
+        const currentPixelSize = 4 * zoom;
+        const newPixelSize = 4 * newZoom;
+
+        const canvasMouseX = (mouseX - position.x) / currentPixelSize;
+        const canvasMouseY = (mouseY - position.y) / currentPixelSize;
+
+        // Вычисляем новую позицию канваса, чтобы сохранить точку под мышью
+       
+
+        const newPosition = {
+          x: mouseX - canvasMouseX * newPixelSize,
+          y: mouseY - canvasMouseY * newPixelSize,
+        };
+
+        // Применяем изменения
         onZoomChange(newZoom);
+        onPositionChange(newPosition);
       }
     },
-    [zoom, onZoomChange]
+    [zoom, position, onZoomChange, onPositionChange]
   );
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {

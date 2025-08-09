@@ -1,6 +1,6 @@
 // Canvas dimensions
-export const GRID_WIDTH = 256; // Canvas width in pixels
-export const GRID_HEIGHT = 256; // Canvas height in pixels
+export const GRID_WIDTH = 800; // Canvas width in pixels
+export const GRID_HEIGHT = 450; // Canvas height in pixels
 export const PIXEL_SIZE = 1; // 1:1 pixel ratio for precise drawing
 
 // Performance optimization constants - optimized for instant drawing like Paint

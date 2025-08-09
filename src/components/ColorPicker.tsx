@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback } from "react";
+import React, { useState, memo, useCallback, useMemo } from "react";
 
 interface ColorPickerProps {
   currentColor: string;
@@ -16,22 +16,25 @@ const ColorPicker: React.FC<ColorPickerProps> = memo(
     const [lightness, setLightness] = useState(100);
     const [hexInput, setHexInput] = useState("#ffffff");
 
-    const presetColors = [
-      "#ff0000",
-      "#ff00ff",
-      "#8000ff",
-      "#4000ff",
-      "#0080ff",
-      "#00ffff",
-      "#00ff80",
-      "#00ff00",
-      "#80ff00",
-      "#ffff00",
-      "#ffc000",
-      "#ff8000",
-      "#ffffff",
-      "#000000",
-    ];
+    const presetColors = useMemo(
+      () => [
+        "#ff0000",
+        "#ff00ff",
+        "#8000ff",
+        "#4000ff",
+        "#0080ff",
+        "#00ffff",
+        "#00ff80",
+        "#00ff00",
+        "#80ff00",
+        "#ffff00",
+        "#ffc000",
+        "#ff8000",
+        "#ffffff",
+        "#000000",
+      ],
+      []
+    );
 
     // Конвертация HSL в Hex
     const hslToHex = useCallback((h: number, s: number, l: number): string => {

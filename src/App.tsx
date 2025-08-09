@@ -20,6 +20,7 @@ const PixelEditor: React.FC = memo(() => {
     setCurrentColor,
     setZoom,
     setPosition,
+    recalculatePosition,
   } = useSimpleCanvas();
 
   const ethBalance = "0.0105";
@@ -33,25 +34,25 @@ const PixelEditor: React.FC = memo(() => {
     x: number;
     y: number;
   } | null>(null);
-  // Центрирование канваса при загрузке с отступами для видимости тени
+  const [credits, setCredits] = useState(0);
+  // Центрирование канваса только при загрузке и изменении размеров сетки (не при зуме)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const shadowMargin = 40; // Отступ для полной видимости тени (shadowBlur: 20 + shadowOffset: 8 + запас)
-      const canvasWidth = GRID_WIDTH * zoom;
-      const canvasHeight = GRID_HEIGHT * zoom;
-
-      const centerX = Math.max(
-        shadowMargin,
-        (window.innerWidth - canvasWidth) / 2
-      );
-      const centerY = Math.max(
-        shadowMargin + 64, // +64 для header
-        (window.innerHeight - canvasHeight) / 2
-      );
-
-      setPosition({ x: centerX, y: centerY });
+      recalculatePosition();
     }
-  }, [setPosition, zoom]);
+  }, [recalculatePosition, GRID_WIDTH, GRID_HEIGHT]);
+
+  // Обработчик изменения размера окна
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      recalculatePosition();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [recalculatePosition]);
 
   const handlePixelClick = useCallback(
     (x: number, y: number) => {
@@ -71,7 +72,7 @@ const PixelEditor: React.FC = memo(() => {
   );
 
   const handlePositionChange = useCallback(
-    (newPosition: { x: number; y: number }) => {
+    (newPosition: { x: number; y: number }) => {      
       setPosition(newPosition);
     },
     [setPosition]
@@ -83,8 +84,6 @@ const PixelEditor: React.FC = memo(() => {
     },
     [setZoom]
   );
-
-  const [credits, setCredits] = useState(0);
 
   const handleCreditsChange = useCallback((newCredits: number) => {
     setCredits(newCredits);

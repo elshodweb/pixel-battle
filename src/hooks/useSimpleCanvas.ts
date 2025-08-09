@@ -14,23 +14,15 @@ export interface SimpleCanvasStore {
   setZoom: (zoom: number) => void;
   setPosition: (position: { x: number; y: number }) => void;
   clearAll: () => void;
+  recalculatePosition: () => void;
 }
 
 const useSimpleCanvas = (): SimpleCanvasStore => {
   const [currentColor, setCurrentColorState] = useState<string>("#ff0000");
   const [zoom, setZoomState] = useState<number>(DEFAULT_ZOOM);
-  const [position, setPositionState] = useState({ x: 200, y: 200 });
-  const [pixels, setPixels] = useState<Map<string, string>>(new Map());
+  const [position, setPositionState] = useState({ x: 0, y: 0 });
+  const [pixels, setPixels] = useState<Map<string, string>>(() => new Map());
   const [updateCounter, setUpdateCounter] = useState(0);
-
-  // Инициализация с пустым канвасом
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const newPixels = new Map<string, string>();
-      setPixels(newPixels);
-      console.log("Simple Canvas initialized with empty canvas");
-    }
-  }, []);
 
   const setPixel = useCallback((x: number, y: number, color: string) => {
     if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) return;
@@ -42,7 +34,6 @@ const useSimpleCanvas = (): SimpleCanvasStore => {
       return newPixels;
     });
     setUpdateCounter((prev) => prev + 1);
-    console.log(`Set pixel at ${x},${y} to ${color}`);
   }, []);
 
   const setCurrentColor = useCallback((color: string) => {
@@ -57,10 +48,29 @@ const useSimpleCanvas = (): SimpleCanvasStore => {
     setPositionState(newPosition);
   }, []);
 
+  // Функция для пересчета позиции при изменении размеров сетки
+  const recalculatePosition = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    const shadowMargin = 40;
+    const canvasWidth = GRID_WIDTH * zoom;
+    const canvasHeight = GRID_HEIGHT * zoom;
+
+    const centerX = Math.max(
+      shadowMargin,
+      (window.innerWidth - canvasWidth) / 2
+    );
+    const centerY = Math.max(
+      shadowMargin + 64,
+      (window.innerHeight - canvasHeight) / 2
+    );
+
+    // setPositionState({ x: centerX, y: centerY });
+  }, [zoom]);
+
   const clearAll = useCallback(() => {
     setPixels(new Map());
-    setUpdateCounter((prev) => prev + 1); // Force re-render
-    console.log("Canvas cleared");
+    setUpdateCounter((prev) => prev + 1);
   }, []);
 
   return {
@@ -68,12 +78,13 @@ const useSimpleCanvas = (): SimpleCanvasStore => {
     zoom,
     position,
     pixels,
-    updateCounter, // For forcing re-renders
+    updateCounter,
     setPixel,
     setCurrentColor,
     setZoom,
     setPosition,
     clearAll,
+    recalculatePosition,
   };
 };
 

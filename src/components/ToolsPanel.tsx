@@ -18,6 +18,14 @@ const ToolsPanel: React.FC<ToolsPanelProps> = memo(
       }
     }, [onCreditsChange, credits]);
 
+    const handleColorPickerToggle = useCallback(() => {
+      setIsColorPickerOpen((prev) => !prev);
+    }, []);
+
+    const handleColorPickerClose = useCallback(() => {
+      setIsColorPickerOpen(false);
+    }, []);
+
     return (
       <div className="fixed bottom-6 left-6 z-30">
         <div className="relative">
@@ -27,7 +35,7 @@ const ToolsPanel: React.FC<ToolsPanelProps> = memo(
                 <div
                   className="w-12 h-12 rounded-full border-2 border-orange-400 cursor-pointer relative overflow-hidden hover:border-orange-300 transition-colors"
                   style={{ backgroundColor: currentColor }}
-                  onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
+                  onClick={handleColorPickerToggle}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
                 </div>
@@ -62,7 +70,7 @@ const ToolsPanel: React.FC<ToolsPanelProps> = memo(
                 currentColor={currentColor}
                 onColorChange={onColorChange}
                 isOpen={isColorPickerOpen}
-                onClose={() => setIsColorPickerOpen(false)}
+                onClose={handleColorPickerClose}
               />
             </div>
           )}

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 
 interface HeaderProps {
   ethBalance?: string;
@@ -11,6 +11,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = memo(
   ({ ethBalance = "0.0105", walletAddress = "0x73..4e49" }) => {
     const [imageError, setImageError] = useState(false);
+
+    const handleImageError = useCallback(() => {
+      setImageError(true);
+    }, []);
 
     return (
       <header
@@ -32,8 +36,9 @@ const Header: React.FC<HeaderProps> = memo(
                         width={120}
                         height={32}
                         className="h-8 w-auto"
+                        style={{ aspectRatio: "120/32" }}
                         priority
-                        onError={() => setImageError(true)}
+                        onError={handleImageError}
                       />
                     ) : (
                       <div className="text-2xl font-bold">
